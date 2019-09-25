@@ -59,7 +59,8 @@ public class AddCommandParserTest {
                 + TAG_DESC_FRIEND, new AddCommand(expectedPerson));
 
         // multiple addresses - last address accepted
-        assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedPerson));
+        assertParseSuccess(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                + TAG_DESC_FRIEND, new AddCommand(expectedPerson));
 
         // multiple tags - all accepted
         Person expectedPersonMultipleTags = new PersonBuilder(BOB).withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
@@ -123,8 +124,8 @@ public class AddCommandParserTest {
                 Name.MESSAGE_CONSTRAINTS);
 
         // non-empty preamble
-        assertParseFailure(parser, PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB +
-                TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
+        assertParseFailure(parser, PREAMBLE_NON_EMPTY + NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
     }
 }
