@@ -27,11 +27,14 @@ public class LogicQuizManager implements Logic {
     private final Model model;
     private final Storage storage;
     private final AddressBookParser addressBookParser;
+    private final UndoRedoStack undoRedoStack;
 
     public LogicQuizManager(Model model, Storage storage) {
         this.model = model;
         this.storage = storage;
+        this.history = new CommandHistory();
         addressBookParser = new AddressBookParser();
+        this.undoRedoStack = new UndoRedoStack();
     }
 
     @Override
@@ -42,7 +45,9 @@ public class LogicQuizManager implements Logic {
         CommandResult commandResult;
         //Parse user input from String to a Command
         Command command = addressBookParser.parseCommand(commandText);
+        command.setData(model, history, undoRedoStack);
         commandResult = command.execute(model);
+        undoRedoStack.push(command);
 
         try {
             //We can deduce that the previous line of code modifies model in some way
@@ -50,9 +55,16 @@ public class LogicQuizManager implements Logic {
             storage.saveAddressBook(model.getAddressBook());
         } catch (IOException ioe) {
             throw new CommandException(FILE_OPS_ERROR_MESSAGE + ioe, ioe);
+        } finally {
+            history.add(commandText);
         }
 
         return commandResult;
+    }
+
+    @Override
+    public ListElementPointer getHistorySnapshot() {
+        return new ListElementPointer(history.getHistory());
     }
 
     @Override

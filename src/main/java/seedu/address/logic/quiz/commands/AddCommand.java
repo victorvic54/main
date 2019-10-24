@@ -14,7 +14,7 @@ import seedu.address.model.quiz.person.Question;
 /**
  * Adds a question to the address book.
  */
-public class AddCommand extends Command {
+public class AddCommand extends UndoableCommand {
 
     public static final String COMMAND_WORD = "add";
 
@@ -47,7 +47,7 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public CommandResult execute(Model model) throws CommandException {
+    public CommandResult executeUndoableCommand(Model model) throws CommandException {
         requireNonNull(model);
 
         if (model.hasQuestion(toAdd)) {
